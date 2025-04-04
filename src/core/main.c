@@ -1,4 +1,5 @@
 #include <raylib.h>
+#include "../lib/physics.h"
 
 int main (void)
 {
@@ -7,13 +8,27 @@ int main (void)
 
     InitWindow(screenWidth, screenHeight, "Physics! YAY");
 
+    PhysicsObject ball = CreatePhysicsObject(screenWidth/2.0f, screenHeight/2.0f, 1.0f);
+
+    ball.acceleration.y = 9.8f * 30.0f;
+
     SetTargetFPS(60);
 
     while (!WindowShouldClose())
     {
+
+        float deltaTime = GetFrameTime();
+
+        UpdatePhysicsObject(&ball, deltaTime);
+
+        if (ball.position.y > screenHeight) {
+            ball.position.y = 0;
+            ball.position.x = 0;
+        }
+
         BeginDrawing();
             ClearBackground(RAYWHITE);
-            DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
+            DrawCircleV(ball.position, 20, RED);
 
         EndDrawing();
     }
